@@ -1,0 +1,55 @@
+{
+  "name": "seattle-food-discovery",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "engines": {
+    "node": ">=22.13"
+  },
+  "scripts": {
+    "dev": "concurrently --kill-others-on-fail --names web,api --prefix-colors cyan,green \"vite\" \"npm --prefix server run dev\"",
+    "dev:web": "vite",
+    "build": "tsc --noEmit && npm --prefix server run typecheck && vite build",
+    "start": "npm --prefix server start",
+    "preview": "vite preview",
+    "postinstall": "npm --prefix server ci --no-audit --no-fund",
+    "typecheck": "tsc --noEmit && npm --prefix server run typecheck",
+    "lint": "eslint .",
+    "test": "NODE_OPTIONS=--disable-warning=ExperimentalWarning vitest run --reporter=default --reporter=junit --outputFile.junit=artifacts/vitest-junit.xml",
+    "test:eval": "node --disable-warning=ExperimentalWarning --import tsx tests/eval/run.ts",
+    "test:e2e": "playwright test",
+    "test:chaos": "node --disable-warning=ExperimentalWarning --import tsx tests/chaos/run.ts",
+    "test:security": "node --disable-warning=ExperimentalWarning --import tsx tests/security/run.ts",
+    "test:lighthouse": "node tests/lighthouse/run.mjs",
+    "test:soak": "for i in 1 2 3 4 5 6 7 8 9 10; do echo \"== soak run $i/10 ==\"; npm test --silent && playwright test --project=chromium-1440 --reporter=dot || exit 1; done",
+    "test:all": "npm run lint && npm run build && npm run scan:dist && npm test && npm run test:eval && npm run test:e2e && npm run test:chaos && npm run test:security",
+    "scan:dist": "node scripts/scan-dist.mjs",
+    "preflight": "node scripts/preflight.mjs",
+    "seed": "npm --prefix server run seed",
+    "reset-demo": "npm --prefix server run reset-demo"
+  },
+  "dependencies": {
+    "@fontsource/dm-sans": "^5.3.0",
+    "@fontsource/playfair-display": "^5.3.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.14.0",
+    "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.65.1",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@vitejs/plugin-react": "^5.1.0",
+    "concurrently": "^10.0.7",
+    "eslint": "^10.15.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "globals": "^17.14.0",
+    "lighthouse": "^13.6.0",
+    "tsx": "^4.23.15",
+    "typescript": "^5.9.0",
+    "typescript-eslint": "^8.74.0",
+    "vite": "^7.2.0",
+    "vitest": "^5.1.1"
+  }
+}

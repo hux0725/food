@@ -1,0 +1,36 @@
+# Render Blueprint: one web service that builds the front end and serves it plus the API.
+# Deploy: Render dashboard → New → Blueprint → pick this repo and the demo-final branch. See DEPLOY.md.
+services:
+  - type: web
+    name: seattle-food-discovery
+    runtime: node
+    # Starter does not sleep and supports a persistent disk. On "free", see DEPLOY.md (cold starts, data resets).
+    plan: starter
+    region: oregon
+    branch: demo-final
+    buildCommand: npm ci && npm run build
+    startCommand: npm start
+    healthCheckPath: /api/health
+    autoDeploy: false
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: LLM_PROVIDER
+        value: google
+      - key: LLM_MODEL
+        value: gemini-2.5-flash-lite
+      # Secret (a Google Gemini API key): Render asks for the value when the Blueprint is applied. Never put it in this file.
+      - key: LLM_API_KEY
+        sync: false
+      - key: DB_PATH
+        value: /var/data/bite.db
+      - key: CACHE_PATH
+        value: /var/data/assistant-cache.json
+      - key: DEMO_DEBUG
+        value: "false"
+      - key: LOG_LEVEL
+        value: info
+    disk:
+      name: data
+      mountPath: /var/data
+      sizeGB: 1

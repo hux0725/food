@@ -1,0 +1,24 @@
+node_modules
+dist
+.DS_Store
+*.local
+.env
+.env.*
+!*.env.example
+
+agent-tools
+
+# Local database files (created by the server)
+server/data/
+server/dist
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
+
+# Test output
+artifacts/
+test-results/
+playwright-report/
+coverage/
+.tmp/
